@@ -3,6 +3,8 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -154,4 +156,20 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[1].keyWord", is("无标签")))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void should_add_rsEvent_with_User_Info() throws Exception {
+        User newUser = new User("SiyuYang", "female", 25, "siyu@c.com", "18866688888");
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", newUser);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/4"))
+                .andExpect(jsonPath("$.eventName", is("添加一条热搜")))
+                .andExpect(jsonPath("$.keyWord", is("娱乐")))
+                .andExpect(status().isOk());
+    }
+
 }
