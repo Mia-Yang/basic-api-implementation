@@ -112,4 +112,19 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.keyWord", is("无标签")))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void should_update_rs_keyWord() throws Exception {
+        RsEvent rsEvent = new RsEvent("","经济");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(put("/rs/1").content(jsonString).content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/1"))
+                .andExpect(jsonPath("$.eventName", is("第一条事件")))
+                .andExpect(jsonPath("$.keyWord", is("无标签")))
+                .andExpect(status().isOk());
+    }
+
 }
