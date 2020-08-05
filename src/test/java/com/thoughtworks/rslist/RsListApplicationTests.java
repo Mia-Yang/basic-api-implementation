@@ -22,4 +22,12 @@ class RsListApplicationTests {
                 .andExpect(status().isOk()).andReturn();
     }
 
+    @Test
+    public void get_rs_event() throws Exception {
+        mockMvc.perform(get("/rs/1"))
+        .andExpect(content().string("第一条事件"))
+                .andExpect(status().isOk());
+    }
+
+
 }
