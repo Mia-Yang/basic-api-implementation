@@ -29,4 +29,17 @@ class RsControllerTest {
                 .andExpect(content().string("第一条事件"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void get_rs_between() throws Exception {
+        mockMvc.perform(get("/rs/list?start=1&end=2"))   //问号之后是参数，以&分隔
+                .andExpect(content().string("[第一条事件, 第二条事件]"))
+                .andExpect(status().isOk()).andReturn();
+        mockMvc.perform(get("/rs/list?start=2&end=3"))   //问号之后是参数，以&分隔
+                .andExpect(content().string("[第二条事件, 第三条事件]"))
+                .andExpect(status().isOk()).andReturn();
+        mockMvc.perform(get("/rs/list?start=1&end=3"))   //问号之后是参数，以&分隔
+                .andExpect(content().string("[第一条事件, 第二条事件, 第三条事件]"))
+                .andExpect(status().isOk()).andReturn();
+    }
 }
