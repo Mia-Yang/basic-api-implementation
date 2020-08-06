@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -41,7 +42,8 @@ public class RsController {
             UserController.userList.add(rsEvent.getUser());
         }
         rsList.add(rsEvent);
-        return ResponseEntity.created(null).build();
+        int index = rsList.size();
+        return ResponseEntity.created(null).header("index", String.valueOf(index)).build();
     }
 
     public boolean userExist(User user) {
@@ -56,7 +58,7 @@ public class RsController {
         if (rsEvent.getKeyWord() != null) {
             rsList.get(index - 1).setKeyWord(rsEvent.getKeyWord());
         }
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/rs/{index}")

@@ -81,7 +81,6 @@ class RsControllerTest {
 
     @Test
     public void should_add_rs_event() throws Exception {
-        //String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"}";
         User newUser = new User("Yang", "female", 25, "siyu@c.com", "18866688888");
         RsEvent rsEvent = new RsEvent("猪肉涨价啦", "经济",newUser);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -110,7 +109,7 @@ class RsControllerTest {
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(patch("/rs/1").content(jsonString).content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
         mockMvc.perform(get("/rs/1"))
                 .andExpect(jsonPath("$.eventName", is("大蒜也涨价啦")))
                 .andExpect(jsonPath("$.keyWord", is("无标签")))
@@ -125,7 +124,7 @@ class RsControllerTest {
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(patch("/rs/1").content(jsonString).content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
         mockMvc.perform(get("/rs/1"))
                 .andExpect(jsonPath("$.eventName", is("第一条事件"))) //为什么eventName没有改
                 .andExpect(jsonPath("$.keyWord", is("经济")))
@@ -141,7 +140,7 @@ class RsControllerTest {
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(patch("/rs/2").content(jsonString).content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
         mockMvc.perform(get("/rs/2"))
                 .andExpect(jsonPath("$.eventName", is("黎巴嫩首都爆炸")))
                 .andExpect(jsonPath("$.keyWord", is("突发")))
