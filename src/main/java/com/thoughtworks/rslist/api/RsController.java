@@ -2,7 +2,10 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.exception.Error;
+import com.thoughtworks.rslist.exception.RsEventNotValidException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -12,9 +15,9 @@ import java.util.List;
 
 @RestController
 public class RsController {
-    private List<RsEvent> rsList = initRsEvent();
+    public static List<RsEvent> rsList = initRsEvent();
 
-    private List<RsEvent> initRsEvent() {
+    public static List<RsEvent> initRsEvent() {
         List<RsEvent> rsEventList = new ArrayList<>();
         User user = new User("Siyu" ,"female",25,"123@c.com","18888888888");
         rsEventList.add(new RsEvent("第一条事件", "无标签", user));
@@ -25,6 +28,9 @@ public class RsController {
 
     @GetMapping("/rs/{index}")
     public ResponseEntity<RsEvent> getRsEvent(@PathVariable int index) {
+        if(index < 1 || index > rsList.size()) {
+            throw new RsEventNotValidException("invalid index");
+        }
         return ResponseEntity.ok(rsList.get(index - 1));
     }
 
@@ -65,4 +71,5 @@ public class RsController {
     public void deleteRsEvent(@PathVariable int index) {
         rsList.remove(index - 1);
     }
+
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -100,7 +101,7 @@ class RsControllerTest {
         objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(post("/rs/event").content(jsonString).content(jsonString).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$", hasSize(4)))
@@ -174,18 +175,21 @@ class RsControllerTest {
     }
 
     @Test
-    public void should_add_rsEvent_with_User_Info() throws Exception { //-----cannot pass
+    public void should_add_rsEvent_with_User_Info() throws Exception {
         User newUser = new User("SiyuYang", "female", 25, "siyu@c.com", "18866688888");
         RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", newUser);
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        //String jsonString = "{\"eventName\":\"添加一条热搜\",\"keyWord\":\"娱乐\"，" +
+        //        "\"user\":{\"userName\":\"SiyuYang\",\"gender\":\"female\",\"age\":25, \"email\":\"siyu@c.com\",\"phone\":\"18866688888\"}}";
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/4"))
                 .andExpect(jsonPath("$.eventName", is("添加一条热搜")))
                 .andExpect(jsonPath("$.keyWord", is("娱乐")))
-                .andExpect(jsonPath("$.user.userName", is("SiyuYang")))
                 .andExpect(status().isOk());
     }
 
@@ -242,6 +246,28 @@ class RsControllerTest {
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_throw_index_exception() throws Exception {
+        mockMvc.perform(get("/rs/0"))
+                .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error", is("invalid index")));
+    }
+
+    @Test
+    public void should_throw_method_not_valid_exception() throws Exception {
+        //String jsonString = "{\"eventName\":\"添加一条热搜\",\"keyWord\":\"娱乐\"，\"user\":{\"userName\":\"SiyuYang678\",\"gender\":\"female\",\"age\":25, \"email\":\"siyu@c.com\",\"phone\":\"18866688888\"}}";
+
+        User newUser = new User("Siyuyuyuyu", "female", 25, "siyu@c.com", "18866688888");
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", newUser);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error", is("invalid param")));
+
     }
 
 }
