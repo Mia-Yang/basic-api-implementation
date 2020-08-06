@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.api;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -22,38 +23,40 @@ public class RsController {
     }
 
     @GetMapping("/rs/{index}")
-    public RsEvent getRsEvent(@PathVariable int index) {
-        return rsList.get(index - 1);
+    public ResponseEntity<RsEvent> getRsEvent(@PathVariable int index) {
+        return ResponseEntity.ok(rsList.get(index - 1));
     }
 
     @GetMapping("/rs/list")
-    public List<RsEvent> getRsEventBetween(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
+    public ResponseEntity<List<RsEvent>> getRsEventBetween(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
         if (start != null && end != null) {
-            return rsList.subList(start - 1, end);
+            return ResponseEntity.ok(rsList.subList(start - 1, end));
         }
-        return rsList;
+        return ResponseEntity.ok(rsList);
     }
 
     @PostMapping("/rs/event")
-    public void addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
+    public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
         if(!userExist(rsEvent.getUser())){
             UserController.userList.add(rsEvent.getUser());
         }
         rsList.add(rsEvent);
+        return ResponseEntity.created(null).build();
     }
 
     public boolean userExist(User user) {
-        return UserController.userList.stream().filter(u -> u.getUserName().equals(user.getUserName())).count() > 0;
+        return UserController.userList.stream().anyMatch(u -> u.getUserName().equals(user.getUserName()));
     }
 
     @PatchMapping("/rs/{index}")
-    public void updateRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
+    public ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
         if (rsEvent.getEventName() != null) {
             rsList.get(index - 1).setEventName(rsEvent.getEventName());
         }
         if (rsEvent.getKeyWord() != null) {
             rsList.get(index - 1).setKeyWord(rsEvent.getKeyWord());
         }
+        return ResponseEntity.created(null).build();
     }
 
     @DeleteMapping("/rs/{index}")

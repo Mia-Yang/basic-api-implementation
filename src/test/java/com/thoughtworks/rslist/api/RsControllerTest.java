@@ -88,7 +88,7 @@ class RsControllerTest {
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(jsonString).content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$", hasSize(4)))
                 .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
@@ -110,7 +110,7 @@ class RsControllerTest {
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(patch("/rs/1").content(jsonString).content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/1"))
                 .andExpect(jsonPath("$.eventName", is("大蒜也涨价啦")))
                 .andExpect(jsonPath("$.keyWord", is("无标签")))
@@ -125,7 +125,7 @@ class RsControllerTest {
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(patch("/rs/1").content(jsonString).content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/1"))
                 .andExpect(jsonPath("$.eventName", is("第一条事件"))) //为什么eventName没有改
                 .andExpect(jsonPath("$.keyWord", is("经济")))
@@ -141,7 +141,7 @@ class RsControllerTest {
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(patch("/rs/2").content(jsonString).content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/2"))
                 .andExpect(jsonPath("$.eventName", is("黎巴嫩首都爆炸")))
                 .andExpect(jsonPath("$.keyWord", is("突发")))
@@ -168,7 +168,7 @@ class RsControllerTest {
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/4"))
                 .andExpect(jsonPath("$.eventName", is("添加一条热搜")))
                 .andExpect(jsonPath("$.keyWord", is("娱乐")))
