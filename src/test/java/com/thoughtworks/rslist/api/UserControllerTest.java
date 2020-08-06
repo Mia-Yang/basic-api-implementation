@@ -9,8 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -25,7 +28,7 @@ class UserControllerTest {
         String jsonString = objectMapper.writeValueAsString(user);
 
         mockMvc.perform(post("/user").content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -66,6 +69,18 @@ class UserControllerTest {
 
         mockMvc.perform(post("/user").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void get_user() throws Exception {
+        this.should_register_user();
+        mockMvc.perform(get("/user"))
+                .andExpect(jsonPath("$[0].user_name", is("SiyuYang")))
+                .andExpect(jsonPath("$[0].user_gender", is("female")))
+                .andExpect(jsonPath("$[0].user_age", is(25)))
+                .andExpect(jsonPath("$[0].user_email", is("siyu@c.com")))
+                .andExpect(jsonPath("$[0].user_phone", is("18866688888")))
+                .andExpect(status().isOk());
     }
 
 }

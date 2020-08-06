@@ -1,5 +1,7 @@
 package com.thoughtworks.rslist.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.*;
 
 public class User {
@@ -25,7 +27,7 @@ public class User {
         this.email = email;
         this.phone = phone;
     }
-
+    @JsonProperty("user_age")//把名称序列化为new name
     public int getAge() {
         return age;
     }
@@ -33,7 +35,7 @@ public class User {
     public void setAge(int age) {
         this.age = age;
     }
-
+    @JsonProperty("user_email")
     public String getEmail() {
         return email;
     }
@@ -42,6 +44,7 @@ public class User {
         this.email = email;
     }
 
+    @JsonProperty("user_gender")
     public String getGender() {
         return gender;
     }
@@ -50,6 +53,7 @@ public class User {
         this.gender = gender;
     }
 
+    @JsonProperty("user_phone")
     public String getPhone() {
         return phone;
     }
@@ -58,6 +62,7 @@ public class User {
         this.phone = phone;
     }
 
+    @JsonProperty("user_name")
     public String getUserName() {
         return userName;
     }
