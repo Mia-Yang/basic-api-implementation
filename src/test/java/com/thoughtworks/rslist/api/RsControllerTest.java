@@ -247,27 +247,4 @@ class RsControllerTest {
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
-
-    @Test
-    public void should_throw_index_exception() throws Exception {
-        mockMvc.perform(get("/rs/0"))
-                .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.error", is("invalid index")));
-    }
-
-    @Test
-    public void should_throw_method_not_valid_exception() throws Exception {
-        //String jsonString = "{\"eventName\":\"添加一条热搜\",\"keyWord\":\"娱乐\"，\"user\":{\"userName\":\"SiyuYang678\",\"gender\":\"female\",\"age\":25, \"email\":\"siyu@c.com\",\"phone\":\"18866688888\"}}";
-
-        User newUser = new User("Siyuyuyuyu", "female", 25, "siyu@c.com", "18866688888");
-        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", newUser);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper.writeValueAsString(rsEvent);
-
-        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.error", is("invalid param")));
-
-    }
-
 }
