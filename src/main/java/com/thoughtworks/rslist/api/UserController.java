@@ -9,15 +9,11 @@ import java.util.List;
 
 @RestController
 public class UserController {
-    private List<User> userList = new ArrayList<>();
+    public List<User> userList = new ArrayList<>();
 
     @PostMapping("/user")
     public void resisterUser(@RequestBody @Valid User user) {
         userList.add(user);
     }
 
-    @GetMapping("/user/{index}")
-    public User getUser(@RequestParam int index) {
-        return userList.get(index - 1);
-    }
 }

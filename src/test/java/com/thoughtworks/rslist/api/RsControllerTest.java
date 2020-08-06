@@ -169,6 +169,7 @@ class RsControllerTest {
         mockMvc.perform(get("/rs/4"))
                 .andExpect(jsonPath("$.eventName", is("添加一条热搜")))
                 .andExpect(jsonPath("$.keyWord", is("娱乐")))
+                .andExpect(jsonPath("$.user.userName", is("SiyuYang")))
                 .andExpect(status().isOk());
     }
 
