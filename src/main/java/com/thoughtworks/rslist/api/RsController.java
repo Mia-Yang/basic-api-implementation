@@ -4,6 +4,7 @@ import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +35,15 @@ public class RsController {
     }
 
     @PostMapping("/rs/event")
-    public void addRsEvent(@RequestBody RsEvent rsEvent) {
+    public void addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
+        if(!userExist(rsEvent.getUser())){
+            UserController.userList.add(rsEvent.getUser());
+        }
         rsList.add(rsEvent);
+    }
+
+    public boolean userExist(User user) {
+        return UserController.userList.stream().filter(u -> u.getUserName().equals(user.getUserName())).count() > 0;
     }
 
     @PatchMapping("/rs/{index}")

@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 public class UserController {
-    public List<User> userList = new ArrayList<>();
+    public static List<User> userList = new ArrayList<>();
 
     @PostMapping("/user")
     public void resisterUser(@RequestBody @Valid User user) {

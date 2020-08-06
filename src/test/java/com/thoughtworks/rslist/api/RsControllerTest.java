@@ -82,7 +82,8 @@ class RsControllerTest {
     @Test
     public void should_add_rs_event() throws Exception {
         //String jsonString = "{\"eventName\":\"猪肉涨价啦\",\"keyWord\":\"经济\"}";
-        RsEvent rsEvent = new RsEvent("猪肉涨价啦", "经济");
+        User newUser = new User("Yang", "female", 25, "siyu@c.com", "18866688888");
+        RsEvent rsEvent = new RsEvent("猪肉涨价啦", "经济",newUser);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
@@ -133,7 +134,9 @@ class RsControllerTest {
 
     @Test
     public void should_update_rs_event() throws Exception {
-        RsEvent rsEvent = new RsEvent("黎巴嫩首都爆炸", "突发");
+        RsEvent rsEvent = new RsEvent();
+        rsEvent.setKeyWord("突发");
+        rsEvent.setEventName("黎巴嫩首都爆炸");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(rsEvent);
 
@@ -171,6 +174,61 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.keyWord", is("娱乐")))
                 .andExpect(jsonPath("$.user.userName", is("SiyuYang")))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void should_not_add_rsEvent_when_given_a_null_username() throws Exception {
+        User newUser = new User(null, "female", 25, "siyu@c.com", "18866688888");
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", newUser);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_not_add_rsEvent_when_given_a_null_gender() throws Exception {
+        User newUser = new User("Siyu", null, 25, "siyu@c.com", "18866688888");
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", newUser);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_not_add_rsEvent_when_given_a_illegal_age() throws Exception {
+        User newUser = new User("Siyu", "female", 5, "siyu@c.com", "18866688888");
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", newUser);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_not_add_rsEvent_when_given_a_illegal_email() throws Exception {
+        User newUser = new User("Siyu", "female", 25, "sicom", "18866688888");
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", newUser);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_not_add_rsEvent_when_given_a_illegal_phone() throws Exception {
+        User newUser = new User("Siyu", "female", 25, "siyu@c.com", "18899966688888");
+        RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", newUser);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
 }
