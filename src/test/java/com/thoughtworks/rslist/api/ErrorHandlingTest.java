@@ -51,8 +51,15 @@ public class ErrorHandlingTest {
     }
 
     @Test
+    void should_throw_index_out_of_bounds_exception_2() throws Exception {
+        mockMvc.perform(get("/rs/list?start=1&end=8"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("invalid request param")));
+    }
+
+    @Test
     void should_throw_index_invalid_request_param_exception() throws Exception {
-        mockMvc.perform(get("/rs/list?start=5&end=1"))
+        mockMvc.perform(get("/rs/list?start=2&end=1"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("invalid request param")));
     }

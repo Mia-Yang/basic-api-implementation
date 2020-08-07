@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class RsEventExceptionHandler {
-    @ExceptionHandler({RsEventNotValidException.class, MethodArgumentNotValidException.class, IndexOutOfBoundsException.class, IllegalArgumentException.class})
+    @ExceptionHandler({RsEventNotValidException.class, MethodArgumentNotValidException.class})
     public ResponseEntity rsEventExceptionHandler(Exception e) {
         String errorMessage;
         if(e instanceof MethodArgumentNotValidException) {
             errorMessage = "invalid param";
-        } else if(e instanceof IndexOutOfBoundsException || e instanceof IllegalArgumentException) {
-            errorMessage = "invalid request param";
         } else {
             errorMessage = e.getMessage();
         }
