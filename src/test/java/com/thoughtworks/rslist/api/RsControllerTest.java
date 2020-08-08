@@ -14,6 +14,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -23,6 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class RsControllerTest {
     @Autowired
     MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        RsController.rsList = RsController.initRsEvent();
+    }
 
     @Test
     void get_rs_event_list() throws Exception {
